@@ -17,6 +17,7 @@
 @implementation RbFlickrTopPlacesTVC
 
 @synthesize places = _topPlaces;
+@synthesize placesByCountry = _placesByCountry;
 
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -51,10 +52,46 @@
     self.places = nil;
 }
 
+- (NSString*)getCountry:(NSDictionary*) place
+{
+    NSString *content = [place objectForKey:@"_content"];
+    NSArray* components = [content componentsSeparatedByString:@", "];
+    if ([components count] > 1) {
+        return [components lastObject];
+    }
+    return @"Unknown";
+}
+
+- (NSDictionary*)filterCountries:(NSArray*) places
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:100];
+    for (NSDictionary *place in places) {
+        NSString* country = [self getCountry:place];
+        NSMutableArray *citiesInCountry = [dict objectForKey:country];
+        if (!citiesInCountry) citiesInCountry = [NSMutableArray array];
+        [citiesInCountry addObject:place];
+        [dict setObject:citiesInCountry forKey:country];
+    }
+    
+    NSMutableDictionary *sortedDict = [NSMutableDictionary dictionaryWithCapacity:[dict count]];
+    // now sort cities
+    for (NSString *country in [dict keyEnumerator]) {
+        NSMutableArray *cities = [dict objectForKey:country];
+        NSSortDescriptor* sort = [NSSortDescriptor sortDescriptorWithKey:@"_content" ascending:YES];
+        NSArray *sortedCities = [cities sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
+        [sortedDict setObject:sortedCities forKey:country];
+    }
+    
+    return sortedDict;
+}
+
 -(void)setPlaces:(NSArray *)topPlaces
 {
     if (_topPlaces != topPlaces) {
         _topPlaces = topPlaces;
+        self.placesByCountry = [self filterCountries:topPlaces];
+        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES];
+        self.countries = [[self.placesByCountry allKeys] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
         [self.tableView reloadData];
     }
 }
@@ -64,10 +101,19 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+
+- (NSDictionary*)placeForIndexPath:(NSIndexPath*)indexPath
+{
+    NSString *country = [self.countries objectAtIndex:indexPath.section];
+    NSDictionary *place = [[self.placesByCountry objectForKey:country] objectAtIndex:indexPath.row];
+    return place;
+}
+
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"Photos For Place"]) {
         RbFlickrPhotoListTVC *photoListTVC = (RbFlickrPhotoListTVC*) segue.destinationViewController;
-        NSDictionary *place = [self.places objectAtIndex:[self.tableView indexPathForSelectedRow].row];
+        NSDictionary *place = [self placeForIndexPath:[self.tableView indexPathForSelectedRow]];
         photoListTVC.photoList = [FlickrFetcher photosInPlace:place maxResults:50];
     }
 }
@@ -77,13 +123,14 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 1;
+    return [self.countries count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.places count];
+    NSString *country = [self.countries objectAtIndex:section];
+    return [[self.placesByCountry objectForKey:country] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -93,7 +140,7 @@
     
     if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     
-    NSDictionary *place = [self.places objectAtIndex:indexPath.row];
+    NSDictionary *place = [self placeForIndexPath:indexPath];
     
     // Configure the cell...
     
@@ -116,6 +163,11 @@
     cell.detailTextLabel.text = subtitle;
     
     return cell;
+}
+
+- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return [self.countries objectAtIndex:section];
 }
 
 /*
