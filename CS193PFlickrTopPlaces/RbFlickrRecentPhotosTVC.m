@@ -7,12 +7,15 @@
 //
 
 #import "RbFlickrRecentPhotosTVC.h"
+#import "FlickrFetcher.h"
 
 @interface RbFlickrRecentPhotosTVC ()
 
 @end
 
 @implementation RbFlickrRecentPhotosTVC
+
+@synthesize photoList = _recentPhotos;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -32,6 +35,16 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    self.photoList = [FlickrFetcher recentGeoreferencedPhotos];
+}
+
+- (void)setPhotoList:(NSArray *)recentPhotos
+{
+    if (_recentPhotos != recentPhotos) {
+        _recentPhotos = recentPhotos;
+        [self.tableView reloadData];
+    }
 }
 
 - (void)viewDidUnload
@@ -50,24 +63,28 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return [self.photoList count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"Recent Photo";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
+    if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+    
     // Configure the cell...
+    NSDictionary *photoDescription = [self.photoList objectAtIndex:indexPath.row];
+    
+    cell.textLabel.text = [photoDescription objectForKey:@"title"];
+    cell.detailTextLabel.text = [photoDescription valueForKeyPath:@"description._content"];
     
     return cell;
 }

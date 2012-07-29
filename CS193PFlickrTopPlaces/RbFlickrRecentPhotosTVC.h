@@ -10,4 +10,6 @@
 
 @interface RbFlickrRecentPhotosTVC : UITableViewController
 
+@property (nonatomic, strong) NSArray* photoList;
+
 @end
