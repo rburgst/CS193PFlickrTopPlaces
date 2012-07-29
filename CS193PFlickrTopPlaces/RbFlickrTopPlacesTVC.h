@@ -1,5 +1,5 @@
 //
-//  RbFlickrFirstViewController.h
+//  RbFlickrTopPlacesTVC.h
 //  CS193PFlickrTopPlaces
 //
 //  Created by Rainer Burgstaller on 7/29/12.
@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RbFlickrFirstViewController : UIViewController
+@interface RbFlickrTopPlacesTVC : UITableViewController
+
+@property (nonatomic, strong) NSArray* topPlaces;
 
 @end

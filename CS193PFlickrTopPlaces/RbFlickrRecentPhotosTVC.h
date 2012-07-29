@@ -1,5 +1,5 @@
 //
-//  RbFlickrSecondViewController.h
+//  RbFlickrRecentPhotosTVC.h
 //  CS193PFlickrTopPlaces
 //
 //  Created by Rainer Burgstaller on 7/29/12.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RbFlickrSecondViewController : UIViewController
+@interface RbFlickrRecentPhotosTVC : UITableViewController
 
 @end
