@@ -8,6 +8,7 @@
 
 #import "RbFlickrTopPlacesTVC.h"
 #import "FlickrFetcher.h"
+#import "RbFlickrPhotoListTVC.h"
 
 @interface RbFlickrTopPlacesTVC ()
 
@@ -61,6 +62,14 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"Photos For Place"]) {
+        RbFlickrPhotoListTVC *photoListTVC = (RbFlickrPhotoListTVC*) segue.destinationViewController;
+        NSDictionary *place = [self.places objectAtIndex:[self.tableView indexPathForSelectedRow].row];
+        photoListTVC.photoList = [FlickrFetcher photosInPlace:place maxResults:50];
+    }
 }
 
 #pragma mark - UITableViewDataSource

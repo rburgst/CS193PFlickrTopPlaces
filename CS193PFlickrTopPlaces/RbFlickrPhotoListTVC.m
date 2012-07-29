@@ -7,6 +7,7 @@
 //
 
 #import "RbFlickrPhotoListTVC.h"
+#import "FlickrFetcher.h"
 
 @interface RbFlickrPhotoListTVC ()
 
@@ -25,10 +26,10 @@
     return self;
 }
 
-- (void)setPhotoList:(NSArray *)recentPhotos
+- (void)setPhotoList:(NSArray *)photoList
 {
-    if (_photoList != recentPhotos) {
-        _photoList = recentPhotos;
+    if (_photoList != photoList) {
+        _photoList = photoList;
         [self.tableView reloadData];
     }
 }
@@ -69,9 +70,20 @@
     
     // Configure the cell...
     NSDictionary *photoDescription = [self.photoList objectAtIndex:indexPath.row];
+    NSString *title = [photoDescription objectForKey:@"title"];
+    NSString *subtitle = [photoDescription valueForKeyPath:@"description._content"];
     
-    cell.textLabel.text = [photoDescription objectForKey:@"title"];
-    cell.detailTextLabel.text = [photoDescription valueForKeyPath:@"description._content"];
+    if ([title length] == 0) {
+        title = subtitle;
+    }
+    if ([title length] == 0) {
+        title = @"Unknown";
+    }
+        
+    cell.textLabel.text = title;
+    cell.detailTextLabel.text = subtitle;
+//    NSURL *photoURL = [FlickrFetcher urlForPhoto:photoDescription format:FlickrPhotoFormatLarge];
+//    cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:photoURL]];
     
     return cell;
 }
