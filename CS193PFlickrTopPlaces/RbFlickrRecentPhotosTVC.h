@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RbFlickrPhotoListTVC.h"
 
-@interface RbFlickrRecentPhotosTVC : UITableViewController
+@interface RbFlickrRecentPhotosTVC : RbFlickrPhotoListTVC
 
-@property (nonatomic, strong) NSArray* photoList;
 
 @end

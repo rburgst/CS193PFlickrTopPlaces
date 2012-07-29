@@ -14,6 +14,8 @@
 
 @implementation RbFlickrPhotoListTVC
 
+@synthesize photoList = _photoList;
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -23,41 +25,53 @@
     return self;
 }
 
+- (void)setPhotoList:(NSArray *)recentPhotos
+{
+    if (_photoList != recentPhotos) {
+        _photoList = recentPhotos;
+        [self.tableView reloadData];
+    }
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-    self.places = nil;
+    self.photoList = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return [self.photoList count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"Recent Photo";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
+    if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+    
     // Configure the cell...
+    NSDictionary *photoDescription = [self.photoList objectAtIndex:indexPath.row];
+    
+    cell.textLabel.text = [photoDescription objectForKey:@"title"];
+    cell.detailTextLabel.text = [photoDescription valueForKeyPath:@"description._content"];
     
     return cell;
 }

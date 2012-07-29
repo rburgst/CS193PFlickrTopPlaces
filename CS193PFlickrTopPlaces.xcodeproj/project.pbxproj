@@ -131,10 +131,10 @@
 		D517786F15C526DA002266B1 /* CS193PFlickrTopPlaces */ = {
 			isa = PBXGroup;
 			children = (
-				D51778B415C52C1A002266B1 /* RbFlickrRecentPhotosTVC.h */,
-				D51778B515C52C1A002266B1 /* RbFlickrRecentPhotosTVC.m */,
 				D51778B115C52B09002266B1 /* RbFlickrTopPlacesTVC.h */,
 				D51778B215C52B09002266B1 /* RbFlickrTopPlacesTVC.m */,
+				D51778B415C52C1A002266B1 /* RbFlickrRecentPhotosTVC.h */,
+				D51778B515C52C1A002266B1 /* RbFlickrRecentPhotosTVC.m */,
 				D51778B715C53A2F002266B1 /* RbFlickrPhotoListTVC.h */,
 				D51778B815C53A2F002266B1 /* RbFlickrPhotoListTVC.m */,
 				D51778AD15C52791002266B1 /* FlickrAPIKey.h */,

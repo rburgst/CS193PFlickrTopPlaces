@@ -10,6 +10,6 @@
 
 @interface RbFlickrPhotoListTVC : UITableViewController
 
-@property (nonatomic, strong) NSArray* places;
+@property (nonatomic, strong) NSArray* photoList;
 
 @end
