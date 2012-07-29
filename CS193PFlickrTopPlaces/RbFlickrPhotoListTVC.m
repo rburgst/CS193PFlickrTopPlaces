@@ -8,6 +8,7 @@
 
 #import "RbFlickrPhotoListTVC.h"
 #import "FlickrFetcher.h"
+#import "RbFlickrPhotoViewController.h"
 
 @interface RbFlickrPhotoListTVC ()
 
@@ -46,6 +47,15 @@
 {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"Show Photo"]) {
+        NSDictionary *photo = [self.photoList objectAtIndex:[self.tableView indexPathForSelectedRow].row];
+        NSURL *url = [FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatLarge];
+        [segue.destinationViewController setPhotoURL:url];
+    }
+}
+
 
 #pragma mark - Table view data source
 
@@ -87,6 +97,7 @@
     
     return cell;
 }
+
 
 /*
 // Override to support conditional editing of the table view.
