@@ -38,7 +38,8 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     NSArray* topPlaces = [FlickrFetcher topPlaces];
-    self.topPlaces = topPlaces;
+    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"_content" ascending:YES];
+    self.topPlaces = [topPlaces sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
 }
 
 - (void)viewDidUnload
@@ -81,12 +82,29 @@
     static NSString *CellIdentifier = @"Top Place";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     
     NSDictionary *place = [self.topPlaces objectAtIndex:indexPath.row];
     
     // Configure the cell...
-    cell.textLabel.text = [place objectForKey:@"_content"];
+    
+    NSString *content = [place objectForKey:@"_content"];
+    NSString *title;
+    NSString *subtitle;
+    NSCharacterSet *dividerSet = [NSCharacterSet characterSetWithCharactersInString:@", "];
+    NSArray* components = [content componentsSeparatedByString:@", "];
+    title = [[components objectAtIndex:0] stringByTrimmingCharactersInSet:dividerSet];
+    int i = 0;
+    for (NSString* component in components) {
+        if (i++ == 0) continue;
+        if (i == 2) {
+            subtitle = component;
+        } else {
+            subtitle = [subtitle stringByAppendingFormat:@", %@",component];
+        }
+    }
+    cell.textLabel.text = title;
+    cell.detailTextLabel.text = subtitle;
     
     return cell;
 }
