@@ -1,5 +1,5 @@
 //
-//  RbFlickrTopPlacesTVC.h
+//  RbFlickrPlaceListTVC.h
 //  CS193PFlickrTopPlaces
 //
 //  Created by Rainer Burgstaller on 7/29/12.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RbFlickrTopPlacesTVC : UITableViewController
+@interface RbFlickrPhotoListTVC : UITableViewController
 
 @property (nonatomic, strong) NSArray* places;
 

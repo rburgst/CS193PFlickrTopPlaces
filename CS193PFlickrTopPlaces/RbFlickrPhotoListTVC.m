@@ -1,22 +1,18 @@
 //
-//  RbFlickrTopPlacesTVC.m
+//  RbFlickrPlaceListTVC.m
 //  CS193PFlickrTopPlaces
 //
 //  Created by Rainer Burgstaller on 7/29/12.
 //  Copyright (c) 2012 Rainer Burgstaller. All rights reserved.
 //
 
-#import "RbFlickrTopPlacesTVC.h"
-#import "FlickrFetcher.h"
+#import "RbFlickrPhotoListTVC.h"
 
-@interface RbFlickrTopPlacesTVC ()
+@interface RbFlickrPhotoListTVC ()
 
 @end
 
-@implementation RbFlickrTopPlacesTVC
-
-@synthesize places = _topPlaces;
-
+@implementation RbFlickrPhotoListTVC
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -27,21 +23,6 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
-    NSArray* topPlaces = [FlickrFetcher topPlaces];
-    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"_content" ascending:YES];
-    self.places = [topPlaces sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
-}
-
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -50,61 +31,33 @@
     self.places = nil;
 }
 
--(void)setPlaces:(NSArray *)topPlaces
-{
-    if (_topPlaces != topPlaces) {
-        _topPlaces = topPlaces;
-        [self.tableView reloadData];
-    }
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - UITableViewDataSource
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 1;
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return [self.places count];
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Top Place";
+    static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-    
-    NSDictionary *place = [self.places objectAtIndex:indexPath.row];
-    
     // Configure the cell...
-    
-    NSString *content = [place objectForKey:@"_content"];
-    NSString *title;
-    NSString *subtitle;
-    NSCharacterSet *dividerSet = [NSCharacterSet characterSetWithCharactersInString:@", "];
-    NSArray* components = [content componentsSeparatedByString:@", "];
-    title = [[components objectAtIndex:0] stringByTrimmingCharactersInSet:dividerSet];
-    int i = 0;
-    for (NSString* component in components) {
-        if (i++ == 0) continue;
-        if (i == 2) {
-            subtitle = component;
-        } else {
-            subtitle = [subtitle stringByAppendingFormat:@", %@",component];
-        }
-    }
-    cell.textLabel.text = title;
-    cell.detailTextLabel.text = subtitle;
     
     return cell;
 }

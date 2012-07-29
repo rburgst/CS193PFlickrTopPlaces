@@ -27,6 +27,7 @@
 		D51778B015C52791002266B1 /* FlickrFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = D51778AF15C52791002266B1 /* FlickrFetcher.m */; };
 		D51778B315C52B09002266B1 /* RbFlickrTopPlacesTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D51778B215C52B09002266B1 /* RbFlickrTopPlacesTVC.m */; };
 		D51778B615C52C1A002266B1 /* RbFlickrRecentPhotosTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D51778B515C52C1A002266B1 /* RbFlickrRecentPhotosTVC.m */; };
+		D51778B915C53A2F002266B1 /* RbFlickrPhotoListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D51778B815C53A2F002266B1 /* RbFlickrPhotoListTVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,8 @@
 		D51778B215C52B09002266B1 /* RbFlickrTopPlacesTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RbFlickrTopPlacesTVC.m; sourceTree = "<group>"; };
 		D51778B415C52C1A002266B1 /* RbFlickrRecentPhotosTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RbFlickrRecentPhotosTVC.h; sourceTree = "<group>"; };
 		D51778B515C52C1A002266B1 /* RbFlickrRecentPhotosTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RbFlickrRecentPhotosTVC.m; sourceTree = "<group>"; };
+		D51778B715C53A2F002266B1 /* RbFlickrPhotoListTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RbFlickrPhotoListTVC.h; sourceTree = "<group>"; };
+		D51778B815C53A2F002266B1 /* RbFlickrPhotoListTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RbFlickrPhotoListTVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +135,8 @@
 				D51778B515C52C1A002266B1 /* RbFlickrRecentPhotosTVC.m */,
 				D51778B115C52B09002266B1 /* RbFlickrTopPlacesTVC.h */,
 				D51778B215C52B09002266B1 /* RbFlickrTopPlacesTVC.m */,
+				D51778B715C53A2F002266B1 /* RbFlickrPhotoListTVC.h */,
+				D51778B815C53A2F002266B1 /* RbFlickrPhotoListTVC.m */,
 				D51778AD15C52791002266B1 /* FlickrAPIKey.h */,
 				D51778AE15C52791002266B1 /* FlickrFetcher.h */,
 				D51778AF15C52791002266B1 /* FlickrFetcher.m */,
@@ -304,6 +309,7 @@
 				D51778B015C52791002266B1 /* FlickrFetcher.m in Sources */,
 				D51778B315C52B09002266B1 /* RbFlickrTopPlacesTVC.m in Sources */,
 				D51778B615C52C1A002266B1 /* RbFlickrRecentPhotosTVC.m in Sources */,
+				D51778B915C53A2F002266B1 /* RbFlickrPhotoListTVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
