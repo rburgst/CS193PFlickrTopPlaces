@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#define RECENTS_KEY @"RbFlickrPhotoViewController.recents"
+
 @interface RbFlickrPhotoListTVC : UITableViewController
 
 @property (nonatomic, strong) NSArray* photoList;

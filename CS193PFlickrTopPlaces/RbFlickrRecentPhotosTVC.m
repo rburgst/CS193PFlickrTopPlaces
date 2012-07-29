@@ -10,6 +10,8 @@
 #import "FlickrFetcher.h"
 #import "RbFlickrPhotoViewController.h"
 
+
+
 @interface RbFlickrRecentPhotosTVC ()
 
 @end
@@ -27,9 +29,14 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    self.photoList = [FlickrFetcher recentGeoreferencedPhotos];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+    self.photoList = [defaults objectForKey:RECENTS_KEY];
+}
 
 #pragma mark - Table view delegate
 

@@ -48,9 +48,29 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+- (void)addPhotoToRecents:(NSDictionary*)photoDescription
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableArray *recents = [[defaults objectForKey:RECENTS_KEY] mutableCopy];
+    if (!recents) recents = [NSMutableArray array];
+    
+    if ([recents containsObject:photoDescription]) {
+        [recents removeObject:photoDescription];
+    }
+    
+    [recents insertObject:photoDescription atIndex:0];
+    while ([recents count] > 20) {
+        [recents removeLastObject];
+    }
+    [defaults setObject:recents forKey:RECENTS_KEY];
+    [defaults synchronize];
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"Show Photo"]) {
         NSDictionary *photo = [self.photoList objectAtIndex:[self.tableView indexPathForSelectedRow].row];
+        
+        [self addPhotoToRecents:photo];
         NSURL *url = [FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatLarge];
         [segue.destinationViewController setPhotoURL:url];
     }
