@@ -8,6 +8,7 @@
 
 #import "RbFlickrRecentPhotosTVC.h"
 #import "FlickrFetcher.h"
+#import "RbFlickrPhotoViewController.h"
 
 @interface RbFlickrRecentPhotosTVC ()
 
@@ -29,6 +30,13 @@
     self.photoList = [FlickrFetcher recentGeoreferencedPhotos];
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"Show Photo"]) {
+        NSDictionary *photo = [self.photoList objectAtIndex:[self.tableView indexPathForSelectedRow].row];
+        NSURL *url = [FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatLarge];
+        [segue.destinationViewController setPhotoURL:url];
+    }
+}
 
 #pragma mark - Table view delegate
 
