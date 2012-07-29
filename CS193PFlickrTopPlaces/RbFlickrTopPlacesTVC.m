@@ -12,11 +12,12 @@
 
 @interface RbFlickrTopPlacesTVC ()
 
+- (void)setPlaces:(NSArray*)places;
+
 @end
 
 @implementation RbFlickrTopPlacesTVC
 
-@synthesize places = _topPlaces;
 @synthesize placesByCountry = _placesByCountry;
 
 
@@ -85,15 +86,12 @@
     return sortedDict;
 }
 
--(void)setPlaces:(NSArray *)topPlaces
+-(void)setPlaces:(NSArray *)places
 {
-    if (_topPlaces != topPlaces) {
-        _topPlaces = topPlaces;
-        self.placesByCountry = [self filterCountries:topPlaces];
-        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES];
-        self.countries = [[self.placesByCountry allKeys] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
-        [self.tableView reloadData];
-    }
+    self.placesByCountry = [self filterCountries:places];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES];
+    self.countries = [[self.placesByCountry allKeys] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
+    [self.tableView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

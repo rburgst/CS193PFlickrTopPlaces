@@ -10,7 +10,7 @@
 
 @interface RbFlickrTopPlacesTVC : UITableViewController
 
-@property (nonatomic, strong) NSArray* places;
 @property (nonatomic, strong) NSDictionary* placesByCountry;
 @property (nonatomic, strong) NSArray* countries;
+
 @end
