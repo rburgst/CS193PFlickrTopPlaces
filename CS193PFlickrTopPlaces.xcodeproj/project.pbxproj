@@ -30,6 +30,8 @@
 		D51778B915C53A2F002266B1 /* RbFlickrPhotoListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D51778B815C53A2F002266B1 /* RbFlickrPhotoListTVC.m */; };
 		D51778BC15C540FD002266B1 /* RbFlickrPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D51778BB15C540FC002266B1 /* RbFlickrPhotoViewController.m */; };
 		D5A3F54115CDBF840032E95F /* RbFlickrPhotosForPlaceTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D5A3F54015CDBF840032E95F /* RbFlickrPhotosForPlaceTVC.m */; };
+		D5A3F54815CDD3940032E95F /* RbFlickrCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D5A3F54715CDD3940032E95F /* RbFlickrCache.m */; };
+		D5A3F54E15CDDD820032E95F /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = D5A3F54D15CDDD820032E95F /* NSString+Encoding.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +80,10 @@
 		D51778BB15C540FC002266B1 /* RbFlickrPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RbFlickrPhotoViewController.m; sourceTree = "<group>"; };
 		D5A3F53F15CDBF840032E95F /* RbFlickrPhotosForPlaceTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RbFlickrPhotosForPlaceTVC.h; sourceTree = "<group>"; };
 		D5A3F54015CDBF840032E95F /* RbFlickrPhotosForPlaceTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RbFlickrPhotosForPlaceTVC.m; sourceTree = "<group>"; };
+		D5A3F54615CDD3940032E95F /* RbFlickrCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RbFlickrCache.h; sourceTree = "<group>"; };
+		D5A3F54715CDD3940032E95F /* RbFlickrCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RbFlickrCache.m; sourceTree = "<group>"; };
+		D5A3F54C15CDDD820032E95F /* NSString+Encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Encoding.h"; sourceTree = "<group>"; };
+		D5A3F54D15CDDD820032E95F /* NSString+Encoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Encoding.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,8 +143,12 @@
 		D517786F15C526DA002266B1 /* CS193PFlickrTopPlaces */ = {
 			isa = PBXGroup;
 			children = (
+				D5A3F54C15CDDD820032E95F /* NSString+Encoding.h */,
+				D5A3F54D15CDDD820032E95F /* NSString+Encoding.m */,
 				D51778BA15C540FC002266B1 /* RbFlickrPhotoViewController.h */,
 				D51778BB15C540FC002266B1 /* RbFlickrPhotoViewController.m */,
+				D5A3F54615CDD3940032E95F /* RbFlickrCache.h */,
+				D5A3F54715CDD3940032E95F /* RbFlickrCache.m */,
 				D51778B115C52B09002266B1 /* RbFlickrTopPlacesTVC.h */,
 				D51778B215C52B09002266B1 /* RbFlickrTopPlacesTVC.m */,
 				D51778B415C52C1A002266B1 /* RbFlickrRecentPhotosTVC.h */,
@@ -322,6 +332,8 @@
 				D51778B915C53A2F002266B1 /* RbFlickrPhotoListTVC.m in Sources */,
 				D51778BC15C540FD002266B1 /* RbFlickrPhotoViewController.m in Sources */,
 				D5A3F54115CDBF840032E95F /* RbFlickrPhotosForPlaceTVC.m in Sources */,
+				D5A3F54815CDD3940032E95F /* RbFlickrCache.m in Sources */,
+				D5A3F54E15CDDD820032E95F /* NSString+Encoding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

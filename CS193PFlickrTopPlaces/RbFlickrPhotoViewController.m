@@ -8,6 +8,9 @@
 
 #import "RbFlickrPhotoViewController.h"
 #import "FlickrFetcher.h"
+#import "RbFlickrCache.h"
+
+#define MYDEBUG NO
 
 @interface RbFlickrPhotoViewController ()<UIScrollViewDelegate>
 
@@ -17,7 +20,8 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinnerView;
 @property (nonatomic) BOOL haveInitialSize;
-
+@property (nonatomic, strong) RbFlickrCache* cache;
+@property (nonatomic) dispatch_queue_t downloadQueue;
 @end
 
 
@@ -31,6 +35,8 @@
 @synthesize photoURL = _photoURL;
 @synthesize photoTitle = _photoTitle;
 @synthesize haveInitialSize = _haveInitialSize;
+@synthesize cache = _cache;
+@synthesize downloadQueue = _downloadQueue;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -39,6 +45,13 @@
         // Custom initialization
     }
     return self;
+}
+
+- (dispatch_queue_t)downloadQueue {
+    if (!_downloadQueue) {
+        _downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+    }
+    return _downloadQueue;
 }
 
 - (void)viewDidLoad
@@ -53,13 +66,25 @@
 
 - (void)viewDidUnload
 {
+    dispatch_release(_downloadQueue);
+    _downloadQueue = 0;
+    
     [self setImageView:nil];
     [self setScrollView:nil];
     [self setSpinnerView:nil];
+ 
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     
     self.photoURL = nil;
+}
+
+- (RbFlickrCache*)cache
+{
+    if (!_cache) {
+        _cache = [[RbFlickrCache alloc] init];
+    }
+    return _cache;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -77,10 +102,12 @@
     self.scrollView.contentSize = self.imageView.bounds.size;
     CGRect sBounds = self.imageView.bounds;
     CGRect sFrame = self.imageView.frame;
-    NSLog(@"image bounds: %f,%f,%f,%f",
-          sBounds.origin.x, sBounds.origin.y, sBounds.size.width, sBounds.size.height);
-    NSLog(@"image frame: %f,%f,%f,%f",
-          sFrame.origin.x, sFrame.origin.y, sFrame.size.width, sFrame.size.height);
+    if (MYDEBUG) {
+        NSLog(@"image bounds: %f,%f,%f,%f",
+              sBounds.origin.x, sBounds.origin.y, sBounds.size.width, sBounds.size.height);
+        NSLog(@"image frame: %f,%f,%f,%f",
+              sFrame.origin.x, sFrame.origin.y, sFrame.size.width, sFrame.size.height);
+    }
     [self autosizeImage];
 }
 
@@ -109,11 +136,18 @@
     
     self.imageView.image = nil;
     [self showSpinner:YES];
-    dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
-    dispatch_async(downloadQueue, ^{
+//    dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+    dispatch_async(self.downloadQueue, ^{
 
         // do work on thread
-        UIImage *loadedImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+        NSData *imageData = [self.cache get:url];
+        
+        if (!imageData) {
+            NSLog(@"Loading image from web: %@", url);
+            imageData = [NSData dataWithContentsOfURL:url];
+            [self.cache put:imageData forURL:url];
+        }
+        UIImage *loadedImage = [UIImage imageWithData:imageData];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -124,7 +158,7 @@
             }
         });
     });
-    dispatch_release(downloadQueue);
+//    dispatch_release(downloadQueue);
 
 }
 
@@ -169,19 +203,22 @@
         }
         
         CGRect finalRect = [self.scrollView convertRect:zoomRect fromView:self.imageView];
-        NSLog(@"before contentSize: %f,%f", self.scrollView.contentSize.width, self.scrollView.contentSize.height);
+        
+        if (MYDEBUG) NSLog(@"before contentSize: %f,%f", self.scrollView.contentSize.width, self.scrollView.contentSize.height);
         
         
         [self.scrollView zoomToRect:finalRect animated:NO];
         
-        NSLog(@"image: %f/%f, scrollview: %f/%f, zoomRect:%f,%f,%f,%f", size.width, size.height,
-              boundsSize.width, boundsSize.height,
-              zoomRect.origin.x, zoomRect.origin.y, zoomRect.size.width, zoomRect.size.height);
-        NSLog(@"zoomScale: %f", self.scrollView.zoomScale);
-        NSLog(@"contentOrigin: %f,%f, contentScale: %f", self.scrollView.contentOffset.x, self.scrollView.contentOffset.y, self.scrollView.contentScaleFactor);
-        NSLog(@"contentSize: %f,%f", self.scrollView.contentSize.width, self.scrollView.contentSize.height);
+        if (MYDEBUG) {
+            NSLog(@"image: %f/%f, scrollview: %f/%f, zoomRect:%f,%f,%f,%f", size.width, size.height,
+                  boundsSize.width, boundsSize.height,
+                  zoomRect.origin.x, zoomRect.origin.y, zoomRect.size.width, zoomRect.size.height);
+            NSLog(@"zoomScale: %f", self.scrollView.zoomScale);
+            NSLog(@"contentOrigin: %f,%f, contentScale: %f", self.scrollView.contentOffset.x, self.scrollView.contentOffset.y, self.scrollView.contentScaleFactor);
+            NSLog(@"contentSize: %f,%f", self.scrollView.contentSize.width, self.scrollView.contentSize.height);
+        }
         CGRect visibleRect = [self.scrollView convertRect:self.scrollView.bounds toView:self.imageView];
-        NSLog(@"visRect:%f,%f,%f,%f",
+        if (MYDEBUG) NSLog(@"visRect:%f,%f,%f,%f",
               visibleRect.origin.x, visibleRect.origin.y, visibleRect.size.width, visibleRect.size.height);
         
         self.haveInitialSize = YES;
