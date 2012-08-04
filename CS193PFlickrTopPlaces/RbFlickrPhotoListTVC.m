@@ -76,6 +76,18 @@
     }
 }
 
+- (void)showPhoto:(NSDictionary*)photo
+{
+    id detail = [self.splitViewController.viewControllers lastObject];
+    if ([detail isKindOfClass:[RbFlickrPhotoViewController class]]) {
+        RbFlickrPhotoViewController *photoVC = (RbFlickrPhotoViewController *)detail;
+        photoVC.photoTitle = [photo objectForKey:FLICKR_PHOTO_TITLE];
+        [self addPhotoToRecents:photo];
+        NSURL *url = [FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatLarge];
+        photoVC.photoURL = url;
+    }
+}
+
 
 #pragma mark - Table view data source
 
@@ -163,12 +175,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        NSDictionary* photo = [self.photoList objectAtIndex:indexPath.row];
+        [self showPhoto:photo];
+    }
 }
 
 @end

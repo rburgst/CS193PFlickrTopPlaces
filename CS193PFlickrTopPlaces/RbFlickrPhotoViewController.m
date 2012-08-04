@@ -87,17 +87,20 @@
     [spinner startAnimating];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
 
+    NSURL *url = [self.photoURL copy];
     dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
     dispatch_async(downloadQueue, ^{
 
         // do work on thread
-        UIImage *loadedImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.photoURL]];
+        UIImage *loadedImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            // update ui
-            [self showImage:loadedImage];
-            self.navigationItem.rightBarButtonItem = nil;
+            if ([self.photoURL isEqual:url]) {
+                // update ui
+                [self showImage:loadedImage];
+                self.navigationItem.rightBarButtonItem = nil;
+            }
         });
     });
     dispatch_release(downloadQueue);
