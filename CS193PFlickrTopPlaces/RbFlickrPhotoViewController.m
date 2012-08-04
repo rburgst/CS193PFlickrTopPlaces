@@ -15,6 +15,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinnerView;
 @property (nonatomic) BOOL haveInitialSize;
 
 @end
@@ -26,6 +27,7 @@
 
 @synthesize imageView = _imageView;
 @synthesize scrollView = _scrollView;
+@synthesize spinnerView = _spinnerView;
 @synthesize photoURL = _photoURL;
 @synthesize photoTitle = _photoTitle;
 @synthesize haveInitialSize = _haveInitialSize;
@@ -53,6 +55,7 @@
 {
     [self setImageView:nil];
     [self setScrollView:nil];
+    [self setSpinnerView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     
@@ -66,7 +69,7 @@
 
 - (void)showImage:(UIImage*)loadedImage {
     [self.scrollView setZoomScale:1.0];
-    self.scrollView.maximumZoomScale = 1.0;
+    self.scrollView.maximumZoomScale = 2.0;
     self.scrollView.minimumZoomScale = 0.2;
     self.imageView.image = loadedImage;
     CGSize size = self.imageView.image.size;
@@ -81,13 +84,31 @@
     [self autosizeImage];
 }
 
+- (void)showSpinner:(BOOL)spinning
+{
+    if (self.spinnerView) {
+        if (spinning) {
+            [self.spinnerView startAnimating];
+        } else {
+            [self.spinnerView stopAnimating];
+        }
+    } else {
+        if (spinning) {
+            UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            [spinner startAnimating];
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+        } else {
+            self.navigationItem.rightBarButtonItem = nil;            
+        }
+    }
+}
+
 - (void)loadAndShowImage
 {
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [spinner startAnimating];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
-
     NSURL *url = [self.photoURL copy];
+    
+    self.imageView.image = nil;
+    [self showSpinner:YES];
     dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
     dispatch_async(downloadQueue, ^{
 
@@ -99,7 +120,7 @@
             if ([self.photoURL isEqual:url]) {
                 // update ui
                 [self showImage:loadedImage];
-                self.navigationItem.rightBarButtonItem = nil;
+                [self showSpinner:NO];
             }
         });
     });

@@ -170,6 +170,12 @@
                                     </imageView>
                                 </subviews>
                             </scrollView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="gray" id="ZeT-Su-ywX">
+                                <rect key="frame" x="375" y="491" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <rect key="contentStretch" x="0.15000000000000002" y="0.0" width="1" height="1"/>
+                                <color key="color" cocoaTouchSystemColor="darkTextColor"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -184,6 +190,7 @@
                     <connections>
                         <outlet property="imageView" destination="sU0-pa-t3a" id="TWZ-Yk-w60"/>
                         <outlet property="scrollView" destination="soM-A2-bgO" id="Ng7-XE-0kf"/>
+                        <outlet property="spinnerView" destination="ZeT-Su-ywX" id="O4T-kC-2Jt"/>
                     </connections>
                 </viewController>
             </objects>
@@ -274,6 +281,7 @@
                 <relationship kind="action" name="infoPressed:"/>
                 <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="spinnerView" candidateClass="UIActivityIndicatorView"/>
             </relationships>
         </class>
         <class className="RbFlickrPhotosForPlaceTVC" superclassName="RbFlickrPhotoListTVC">
