@@ -11,7 +11,9 @@
 
 @interface RbFlickrPhotoViewController ()<UIScrollViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UIImageView *image;
+- (void)autosizeImage;
+
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (nonatomic) BOOL haveInitialSize;
 
@@ -22,8 +24,8 @@
 
 @implementation RbFlickrPhotoViewController
 
-@synthesize image;
-@synthesize scrollView;
+@synthesize imageView = _imageView;
+@synthesize scrollView = _scrollView;
 @synthesize photoURL = _photoURL;
 @synthesize photoTitle = _photoTitle;
 @synthesize haveInitialSize = _haveInitialSize;
@@ -49,7 +51,7 @@
 
 - (void)viewDidUnload
 {
-    [self setImage:nil];
+    [self setImageView:nil];
     [self setScrollView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -62,21 +64,44 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-- (void)loadAndShowImage
-{
+- (void)showImage:(UIImage*)loadedImage {
     [self.scrollView setZoomScale:1.0];
     self.scrollView.maximumZoomScale = 1.0;
     self.scrollView.minimumZoomScale = 0.2;
-    self.image.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.photoURL]];
-    CGSize size = self.image.image.size;
-    self.image.frame = CGRectMake(0, 0, size.width, size.height);
-    self.scrollView.contentSize = self.image.bounds.size;
-    CGRect sBounds = self.image.bounds;
-    CGRect sFrame = self.image.frame;
+    self.imageView.image = loadedImage;
+    CGSize size = self.imageView.image.size;
+    self.imageView.frame = CGRectMake(0, 0, size.width, size.height);
+    self.scrollView.contentSize = self.imageView.bounds.size;
+    CGRect sBounds = self.imageView.bounds;
+    CGRect sFrame = self.imageView.frame;
     NSLog(@"image bounds: %f,%f,%f,%f",
           sBounds.origin.x, sBounds.origin.y, sBounds.size.width, sBounds.size.height);
     NSLog(@"image frame: %f,%f,%f,%f",
           sFrame.origin.x, sFrame.origin.y, sFrame.size.width, sFrame.size.height);
+    [self autosizeImage];
+}
+
+- (void)loadAndShowImage
+{
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [spinner startAnimating];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+
+    dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+    dispatch_async(downloadQueue, ^{
+
+        // do work on thread
+        UIImage *loadedImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.photoURL]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            // update ui
+            [self showImage:loadedImage];
+            self.navigationItem.rightBarButtonItem = nil;
+        });
+    });
+    dispatch_release(downloadQueue);
+
 }
 
 - (void)setPhotoURL:(NSURL *)photoURL {
@@ -91,13 +116,13 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)autosizeImage
 {
     // this is the only place where we can make assumptions about the geometry of the screen
-    if (!self.haveInitialSize) {
+    if (!self.haveInitialSize && self.imageView.image) {
         // determine the best zoom level to show the image as large as possible without
         // wasted pixels
-        CGSize size = self.image.bounds.size;
+        CGSize size = self.imageView.bounds.size;
         CGRect bounds = self.scrollView.bounds;
         CGSize boundsSize = bounds.size;
         
@@ -119,9 +144,9 @@
             zoomRect = CGRectMake(bounds.origin.x, bounds.origin.y + (size.height - zoomHeight)/2, zoomWidth, zoomHeight);
         }
         
-        CGRect finalRect = [self.scrollView convertRect:zoomRect fromView:self.image];
+        CGRect finalRect = [self.scrollView convertRect:zoomRect fromView:self.imageView];
         NSLog(@"before contentSize: %f,%f", self.scrollView.contentSize.width, self.scrollView.contentSize.height);
-
+        
         
         [self.scrollView zoomToRect:finalRect animated:NO];
         
@@ -131,16 +156,23 @@
         NSLog(@"zoomScale: %f", self.scrollView.zoomScale);
         NSLog(@"contentOrigin: %f,%f, contentScale: %f", self.scrollView.contentOffset.x, self.scrollView.contentOffset.y, self.scrollView.contentScaleFactor);
         NSLog(@"contentSize: %f,%f", self.scrollView.contentSize.width, self.scrollView.contentSize.height);
-        CGRect visibleRect = [scrollView convertRect:self.scrollView.bounds toView:self.image];
-        NSLog(@"visRect:%f,%f,%f,%f", 
+        CGRect visibleRect = [self.scrollView convertRect:self.scrollView.bounds toView:self.imageView];
+        NSLog(@"visRect:%f,%f,%f,%f",
               visibleRect.origin.x, visibleRect.origin.y, visibleRect.size.width, visibleRect.size.height);
         
         self.haveInitialSize = YES;
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self autosizeImage];
+}
+
 - (IBAction)infoPressed:(id)sender {
-    CGSize size = self.image.bounds.size;
+    CGSize size = self.imageView.bounds.size;
     CGSize boundsSize = self.scrollView.frame.size;
     CGRect sBounds = self.scrollView.bounds;
     CGRect sFrame = self.scrollView.frame;
@@ -154,7 +186,7 @@
     NSLog(@"zoomScale: %f", self.scrollView.zoomScale);
     NSLog(@"contentOrigin: %f,%f, contentScale: %f", self.scrollView.contentOffset.x, self.scrollView.contentOffset.y, self.scrollView.contentScaleFactor);
     NSLog(@"contentSize: %f,%f", self.scrollView.contentSize.width, self.scrollView.contentSize.height);
-    CGRect visibleRect = [scrollView convertRect:self.scrollView.bounds toView:self.image];
+    CGRect visibleRect = [self.scrollView convertRect:self.scrollView.bounds toView:self.imageView];
     NSLog(@"visRect:%f,%f,%f,%f",
           visibleRect.origin.x, visibleRect.origin.y, visibleRect.size.width, visibleRect.size.height);
 }
@@ -162,6 +194,6 @@
 #pragma mark - UIScrollViewDelegate
 
 - (UIView*) viewForZoomingInScrollView:(UIScrollView *)scrollView {
-    return self.image;
+    return self.imageView;
 }
 @end

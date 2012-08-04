@@ -8,7 +8,7 @@
 
 #import "RbFlickrTopPlacesTVC.h"
 #import "FlickrFetcher.h"
-#import "RbFlickrPhotoListTVC.h"
+#import "RbFlickrPhotosForPlaceTVC.h"
 
 @interface RbFlickrTopPlacesTVC ()
 
@@ -40,9 +40,23 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    NSArray* topPlaces = [FlickrFetcher topPlaces];
-    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"_content" ascending:YES];
-    self.places = [topPlaces sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [spinner startAnimating];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+
+    
+    dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+    dispatch_async(downloadQueue, ^{
+        NSArray* topPlaces = [FlickrFetcher topPlaces];
+        NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:FLICKR_PLACE_NAME ascending:YES];
+        NSArray* sortedPlaces = [topPlaces sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.places = sortedPlaces;
+            self.navigationItem.rightBarButtonItem = nil;
+        });
+    });
+    dispatch_release(downloadQueue);
 }
 
 - (void)viewDidUnload
@@ -55,7 +69,7 @@
 
 - (NSString*)getCountry:(NSDictionary*) place
 {
-    NSString *content = [place objectForKey:@"_content"];
+    NSString *content = [place objectForKey:FLICKR_PLACE_NAME];
     NSArray* components = [content componentsSeparatedByString:@", "];
     if ([components count] > 1) {
         return [components lastObject];
@@ -78,7 +92,7 @@
     // now sort cities
     for (NSString *country in [dict keyEnumerator]) {
         NSMutableArray *cities = [dict objectForKey:country];
-        NSSortDescriptor* sort = [NSSortDescriptor sortDescriptorWithKey:@"_content" ascending:YES];
+        NSSortDescriptor* sort = [NSSortDescriptor sortDescriptorWithKey:FLICKR_PLACE_NAME ascending:YES];
         NSArray *sortedCities = [cities sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
         [sortedDict setObject:sortedCities forKey:country];
     }
@@ -99,7 +113,6 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-
 - (NSDictionary*)placeForIndexPath:(NSIndexPath*)indexPath
 {
     NSString *country = [self.countries objectAtIndex:indexPath.section];
@@ -107,12 +120,12 @@
     return place;
 }
 
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"Photos For Place"]) {
-        RbFlickrPhotoListTVC *photoListTVC = (RbFlickrPhotoListTVC*) segue.destinationViewController;
+        RbFlickrPhotosForPlaceTVC *photoListTVC = (RbFlickrPhotosForPlaceTVC*) segue.destinationViewController;
         NSDictionary *place = [self placeForIndexPath:[self.tableView indexPathForSelectedRow]];
-        photoListTVC.photoList = [FlickrFetcher photosInPlace:place maxResults:50];
+        
+        photoListTVC.place = place;
     }
 }
 
@@ -142,7 +155,7 @@
     
     // Configure the cell...
     
-    NSString *content = [place objectForKey:@"_content"];
+    NSString *content = [place objectForKey:FLICKR_PLACE_NAME];
     NSString *title;
     NSString *subtitle;
     NSCharacterSet *dividerSet = [NSCharacterSet characterSetWithCharactersInString:@", "];

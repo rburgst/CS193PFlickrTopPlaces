@@ -55,11 +55,11 @@
             </objects>
             <point key="canvasLocation" x="1323" y="-164"/>
         </scene>
-        <!--Rb Flickr Photo ListTVC-->
+        <!--Rb Flickr Photos For PlaceTVC-->
         <scene sceneID="3PF-b2-yp4">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QPV-Fw-BaT" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tableViewController id="cGO-M9-DZx" customClass="RbFlickrPhotoListTVC" sceneMemberID="viewController">
+                <tableViewController id="cGO-M9-DZx" customClass="RbFlickrPhotosForPlaceTVC" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="9SF-0k-U0z">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -184,7 +184,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="image" destination="7wT-18-4FQ" id="ehy-nH-CAj"/>
+                        <outlet property="imageView" destination="7wT-18-4FQ" id="ocn-XB-8RY"/>
                         <outlet property="scrollView" destination="IkF-B1-Hng" id="DlI-bF-s6Z"/>
                     </connections>
                 </viewController>
@@ -260,6 +260,9 @@
                 <relationship kind="outlet" name="image" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
             </relationships>
+        </class>
+        <class className="RbFlickrPhotosForPlaceTVC" superclassName="RbFlickrPhotoListTVC">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrPhotosForPlaceTVC.h"/>
         </class>
         <class className="RbFlickrRecentPhotosTVC" superclassName="RbFlickrPhotoListTVC">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrRecentPhotosTVC.h"/>

@@ -29,6 +29,7 @@
 		D51778B615C52C1A002266B1 /* RbFlickrRecentPhotosTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D51778B515C52C1A002266B1 /* RbFlickrRecentPhotosTVC.m */; };
 		D51778B915C53A2F002266B1 /* RbFlickrPhotoListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D51778B815C53A2F002266B1 /* RbFlickrPhotoListTVC.m */; };
 		D51778BC15C540FD002266B1 /* RbFlickrPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D51778BB15C540FC002266B1 /* RbFlickrPhotoViewController.m */; };
+		D5A3F54115CDBF840032E95F /* RbFlickrPhotosForPlaceTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D5A3F54015CDBF840032E95F /* RbFlickrPhotosForPlaceTVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,8 @@
 		D51778B815C53A2F002266B1 /* RbFlickrPhotoListTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RbFlickrPhotoListTVC.m; sourceTree = "<group>"; };
 		D51778BA15C540FC002266B1 /* RbFlickrPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RbFlickrPhotoViewController.h; sourceTree = "<group>"; };
 		D51778BB15C540FC002266B1 /* RbFlickrPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RbFlickrPhotoViewController.m; sourceTree = "<group>"; };
+		D5A3F53F15CDBF840032E95F /* RbFlickrPhotosForPlaceTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RbFlickrPhotosForPlaceTVC.h; sourceTree = "<group>"; };
+		D5A3F54015CDBF840032E95F /* RbFlickrPhotosForPlaceTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RbFlickrPhotosForPlaceTVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +145,8 @@
 				D51778B515C52C1A002266B1 /* RbFlickrRecentPhotosTVC.m */,
 				D51778B715C53A2F002266B1 /* RbFlickrPhotoListTVC.h */,
 				D51778B815C53A2F002266B1 /* RbFlickrPhotoListTVC.m */,
+				D5A3F53F15CDBF840032E95F /* RbFlickrPhotosForPlaceTVC.h */,
+				D5A3F54015CDBF840032E95F /* RbFlickrPhotosForPlaceTVC.m */,
 				D51778AD15C52791002266B1 /* FlickrAPIKey.h */,
 				D51778AE15C52791002266B1 /* FlickrFetcher.h */,
 				D51778AF15C52791002266B1 /* FlickrFetcher.m */,
@@ -316,6 +321,7 @@
 				D51778B615C52C1A002266B1 /* RbFlickrRecentPhotosTVC.m in Sources */,
 				D51778B915C53A2F002266B1 /* RbFlickrPhotoListTVC.m in Sources */,
 				D51778BC15C540FD002266B1 /* RbFlickrPhotoViewController.m in Sources */,
+				D5A3F54115CDBF840032E95F /* RbFlickrPhotosForPlaceTVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -499,6 +505,7 @@
 				D51778A815C526DB002266B1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D51778A915C526DB002266B1 /* Build configuration list for PBXNativeTarget "CS193PFlickrTopPlacesTests" */ = {
 			isa = XCConfigurationList;
@@ -507,6 +514,7 @@
 				D51778AB15C526DB002266B1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -100,8 +100,8 @@
     
     // Configure the cell...
     NSDictionary *photoDescription = [self.photoList objectAtIndex:indexPath.row];
-    NSString *title = [photoDescription objectForKey:@"title"];
-    NSString *subtitle = [photoDescription valueForKeyPath:@"description._content"];
+    NSString *title = [photoDescription objectForKey:FLICKR_PHOTO_TITLE];
+    NSString *subtitle = [photoDescription valueForKeyPath:FLICKR_PHOTO_DESCRIPTION];
     
     if ([title length] == 0) {
         title = subtitle;
