@@ -38,6 +38,7 @@
 		D5A3F55D15CDF1110032E95F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5A3F55B15CDF0F40032E95F /* MapKit.framework */; };
 		D5A3F56015CDF2D20032E95F /* RbFlickrGenericTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D5A3F55F15CDF2D20032E95F /* RbFlickrGenericTVC.m */; };
 		D5A3F56315CDFBE50032E95F /* FlickrPlaceAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D5A3F56215CDFBE50032E95F /* FlickrPlaceAnnotation.m */; };
+		D5A3F56915CE61CB0032E95F /* indicator.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = D5A3F56815CE61CB0032E95F /* indicator.jpeg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +100,7 @@
 		D5A3F55F15CDF2D20032E95F /* RbFlickrGenericTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RbFlickrGenericTVC.m; sourceTree = "<group>"; };
 		D5A3F56115CDFBE50032E95F /* FlickrPlaceAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrPlaceAnnotation.h; sourceTree = "<group>"; };
 		D5A3F56215CDFBE50032E95F /* FlickrPlaceAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrPlaceAnnotation.m; sourceTree = "<group>"; };
+		D5A3F56815CE61CB0032E95F /* indicator.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = indicator.jpeg; path = ../../../../../../Desktop/indicator.jpeg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,6 +229,7 @@
 		D51778AC15C526E9002266B1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D5A3F56815CE61CB0032E95F /* indicator.jpeg */,
 				D517788415C526DA002266B1 /* first.png */,
 				D517788615C526DA002266B1 /* first@2x.png */,
 				D517788B15C526DA002266B1 /* second.png */,
@@ -316,6 +319,7 @@
 				D517788715C526DA002266B1 /* first@2x.png in Resources */,
 				D517788C15C526DA002266B1 /* second.png in Resources */,
 				D517788E15C526DA002266B1 /* second@2x.png in Resources */,
+				D5A3F56915CE61CB0032E95F /* indicator.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

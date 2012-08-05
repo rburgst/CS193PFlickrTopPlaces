@@ -16,11 +16,16 @@
 
 @interface RbFlickrPhotoListTVC () <AnnotationsProvider,MapViewControllerDelegate>
 
+@property (nonatomic) dispatch_queue_t photoQueue;
+@property (nonatomic, strong) UIImage* emptyImage;
+
 @end
 
 @implementation RbFlickrPhotoListTVC
 
 @synthesize photoList = _photoList;
+@synthesize photoQueue = _photoQueue;
+@synthesize emptyImage = _emptyImage;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -29,6 +34,20 @@
         // Custom initialization
     }
     return self;
+}
+
+- (dispatch_queue_t)photoQueue {
+    if (!_photoQueue) {
+        _photoQueue = dispatch_queue_create("flickr photo downloader", NULL);
+    }
+    return _photoQueue;
+}
+
+- (UIImage*)emptyImage {
+    if (!_emptyImage) {
+        _emptyImage = [UIImage imageNamed:@"indicator.jpeg"];
+    }
+    return _emptyImage;
 }
 
 - (void)setPhotoList:(NSArray *)photoList
@@ -41,6 +60,8 @@
 
 - (void)viewDidUnload
 {
+    if (_photoQueue) dispatch_release(_photoQueue);
+    
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -139,8 +160,21 @@
         
     cell.textLabel.text = title;
     cell.detailTextLabel.text = subtitle;
-//    NSURL *photoURL = [FlickrFetcher urlForPhoto:photoDescription format:FlickrPhotoFormatLarge];
-//    cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:photoURL]];
+    cell.imageView.image = self.emptyImage;
+    NSUInteger oldRow = indexPath.row;
+    cell.tag = oldRow;
+    
+    dispatch_async(self.photoQueue, ^{
+        NSURL *photoURL = [FlickrFetcher urlForPhoto:photoDescription format:FlickrPhotoFormatSquare];
+        UIImage *loadedImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:photoURL]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (oldRow == cell.tag) {
+                cell.imageView.image = loadedImage;
+            }
+        });
+        
+    });
     
     return cell;
 }
