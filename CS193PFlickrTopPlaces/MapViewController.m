@@ -37,7 +37,7 @@
     if (self.mapView.annotations) [self.mapView removeAnnotations:self.mapView.annotations];
     
     
-    if ([self.annotations count] > 0) {
+    if (self.mapView && [self.annotations count] > 0) {
         id<MKAnnotation> first = [self.annotations objectAtIndex:0];
         CLLocationCoordinate2D coord = [first coordinate];
         MKMapPoint topLeft = MKMapPointForCoordinate(coord);
@@ -53,10 +53,14 @@
         }
         
         MKMapRect rect = MKMapRectMake(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
+        NSLog(@"map rect %f, %f / %f, %f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
         UIEdgeInsets insets = UIEdgeInsetsMake(30.0, 30.0, 30.0, 30.0);
-        [self.mapView setVisibleMapRect:rect edgePadding:insets animated:YES];
+        [self.mapView setVisibleMapRect:rect edgePadding:insets animated:NO];
 
         [self.mapView addAnnotations:self.annotations];
+        
+        rect = self.mapView.visibleMapRect;
+        NSLog(@"now visible map rect %f, %f / %f, %f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
     }
 }
 

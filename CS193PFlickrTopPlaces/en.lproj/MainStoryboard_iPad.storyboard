@@ -156,7 +156,13 @@
                             <outlet property="delegate" destination="1lS-GQ-CCE" id="lAK-e8-qCq"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Recent Photos" id="6tz-px-qyA"/>
+                    <navigationItem key="navigationItem" title="Recent Photos" id="6tz-px-qyA">
+                        <barButtonItem key="rightBarButtonItem" title="Map" id="52X-Wy-WIO">
+                            <connections>
+                                <segue destination="99M-0a-Qgj" kind="push" identifier="ShowMap" id="Q4N-li-HvO"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
@@ -314,45 +320,12 @@
             <point key="canvasLocation" x="1962" y="-1244"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="MapViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-            </relationships>
-        </class>
-        <class className="RbFlickrGenericTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrGenericTVC.h"/>
-        </class>
-        <class className="RbFlickrPhotoListTVC" superclassName="RbFlickrGenericTVC">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrPhotoListTVC.h"/>
-        </class>
-        <class className="RbFlickrPhotoViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrPhotoViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="infoPressed:"/>
-                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="spinnerView" candidateClass="UIActivityIndicatorView"/>
-                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
-            </relationships>
-        </class>
-        <class className="RbFlickrPhotosForPlaceTVC" superclassName="RbFlickrPhotoListTVC">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrPhotosForPlaceTVC.h"/>
-        </class>
-        <class className="RbFlickrRecentPhotosTVC" superclassName="RbFlickrPhotoListTVC">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrRecentPhotosTVC.h"/>
-        </class>
-        <class className="RbFlickrTopPlacesTVC" superclassName="RbFlickrGenericTVC">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrTopPlacesTVC.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="qXc-Z3-0Yp"/>
+        <segue reference="Q4N-li-HvO"/>
     </inferredMetricsTieBreakers>
 </document>
