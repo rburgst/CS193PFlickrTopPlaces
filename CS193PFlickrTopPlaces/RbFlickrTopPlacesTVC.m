@@ -170,21 +170,10 @@
     
     // Configure the cell...
     
-    NSString *content = [place objectForKey:FLICKR_PLACE_NAME];
     NSString *title;
     NSString *subtitle;
-    NSCharacterSet *dividerSet = [NSCharacterSet characterSetWithCharactersInString:@", "];
-    NSArray* components = [content componentsSeparatedByString:@", "];
-    title = [[components objectAtIndex:0] stringByTrimmingCharactersInSet:dividerSet];
-    int i = 0;
-    for (NSString* component in components) {
-        if (i++ == 0) continue;
-        if (i == 2) {
-            subtitle = component;
-        } else {
-            subtitle = [subtitle stringByAppendingFormat:@", %@",component];
-        }
-    }
+    
+    [FlickrPlaceAnnotation descriptionsForPlace:place forTitle:&title andSubtitle:&subtitle];
     cell.textLabel.text = title;
     cell.detailTextLabel.text = subtitle;
     

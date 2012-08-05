@@ -24,7 +24,11 @@
 
 - (NSString *)title
 {
-    return [self.photo objectForKey:FLICKR_PHOTO_TITLE];
+    NSString* title = [self.photo objectForKey:FLICKR_PHOTO_TITLE];
+    if (![title length]) {
+        return @"Unknown";
+    }
+    return title;
 }
 
 - (NSString *)subtitle

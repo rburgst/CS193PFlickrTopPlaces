@@ -199,6 +199,13 @@
                                 <rect key="contentStretch" x="0.15000000000000002" y="0.0" width="1" height="1"/>
                                 <color key="color" cocoaTouchSystemColor="darkTextColor"/>
                             </activityIndicatorView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Photo" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="nHh-dF-Oec">
+                                <rect key="frame" x="363" y="11" width="46" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -320,6 +327,40 @@
             <point key="canvasLocation" x="1962" y="-1244"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="MapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="infoPressed:"/>
+                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+            </relationships>
+        </class>
+        <class className="RbFlickrGenericTVC" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrGenericTVC.h"/>
+        </class>
+        <class className="RbFlickrPhotoListTVC" superclassName="RbFlickrGenericTVC">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrPhotoListTVC.h"/>
+        </class>
+        <class className="RbFlickrPhotoViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrPhotoViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="infoPressed:"/>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="spinnerView" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
+            </relationships>
+        </class>
+        <class className="RbFlickrPhotosForPlaceTVC" superclassName="RbFlickrPhotoListTVC">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrPhotosForPlaceTVC.h"/>
+        </class>
+        <class className="RbFlickrRecentPhotosTVC" superclassName="RbFlickrPhotoListTVC">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrRecentPhotosTVC.h"/>
+        </class>
+        <class className="RbFlickrTopPlacesTVC" superclassName="RbFlickrGenericTVC">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RbFlickrTopPlacesTVC.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>

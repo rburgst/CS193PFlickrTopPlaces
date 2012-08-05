@@ -12,6 +12,7 @@
 @interface FlickrPlaceAnnotation : NSObject <MKAnnotation>
 
 + (FlickrPlaceAnnotation *)annotationForPlace:(NSDictionary *)place; // Flickr place dictionary
++ (BOOL)descriptionsForPlace:(NSDictionary*)place forTitle:(NSString**)outTitle andSubtitle:(NSString**)outSubtitle;
 
 @property (nonatomic, strong) NSDictionary *place;
 @property (nonatomic, strong) NSString *title;

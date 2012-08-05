@@ -40,12 +40,16 @@
     
     dispatch_queue_t downloadQueue = dispatch_queue_create("PhotosForPlaceDownload", NULL);
     
+    NSDictionary* curPlace = place;
     dispatch_async(downloadQueue, ^{
+        [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
         NSArray *photos = [FlickrFetcher photosInPlace:place maxResults:50];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.photoList = photos;
-            [self showSpinner:NO];
+            if (self.place == curPlace) {
+                self.photoList = photos;
+                [self showSpinner:NO];
+            }
         });
     });
 
