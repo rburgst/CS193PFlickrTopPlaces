@@ -12,7 +12,7 @@
 
 #define MYDEBUG NO
 
-@interface RbFlickrPhotoViewController ()<UIScrollViewDelegate>
+@interface RbFlickrPhotoViewController ()<UIScrollViewDelegate, UISplitViewControllerDelegate>
 
 - (void)autosizeImage;
 
@@ -22,6 +22,9 @@
 @property (nonatomic) BOOL haveInitialSize;
 @property (nonatomic, strong) RbFlickrCache* cache;
 @property (nonatomic) dispatch_queue_t downloadQueue;
+@property (nonatomic, strong) UIBarButtonItem* tabItem;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+
 @end
 
 
@@ -37,6 +40,8 @@
 @synthesize haveInitialSize = _haveInitialSize;
 @synthesize cache = _cache;
 @synthesize downloadQueue = _downloadQueue;
+@synthesize tabItem = _tabItem;
+@synthesize toolbar = _toolbar;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -57,6 +62,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.splitViewController.delegate = self;
 	// Do any additional setup after loading the view.
     self.scrollView.delegate = self;
     if (self.photoURL) {
@@ -73,10 +80,21 @@
     [self setScrollView:nil];
     [self setSpinnerView:nil];
  
+    [self setToolbar:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     
     self.photoURL = nil;
+}
+
+-(void)setTabItem:(UIBarButtonItem *)tabItem {
+    if (tabItem != _tabItem) {
+        NSMutableArray *newItems = [self.toolbar.items mutableCopy];
+        if (_tabItem) [newItems removeObject:_tabItem];
+        if (tabItem) [newItems insertObject:tabItem atIndex:0];
+        _tabItem = tabItem;
+        self.toolbar.items = newItems;
+    }
 }
 
 - (RbFlickrCache*)cache
@@ -256,5 +274,33 @@
 
 - (UIView*) viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.imageView;
+}
+
+// ----------------- ui splitviewdelegate
+#pragma mark UISplitViewDelegate
+
+-(void)splitViewController:(UISplitViewController *)svc
+         popoverController:(UIPopoverController *)pc
+ willPresentViewController:(UIViewController *)aViewController {
+    
+}
+
+-(void)splitViewController:(UISplitViewController *)svc
+    willHideViewController:(UIViewController *)aViewController
+         withBarButtonItem:(UIBarButtonItem *)barButtonItem
+      forPopoverController:(UIPopoverController *)pc {
+    
+    barButtonItem.title = @"Photos";
+    self.tabItem = barButtonItem;
+}
+
+-(void)splitViewController:(UISplitViewController *)svc
+    willShowViewController:(UIViewController *)aViewController
+ invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
+    self.tabItem = nil;
+}
+
+-(BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation {
+    return UIInterfaceOrientationIsPortrait(orientation);
 }
 @end

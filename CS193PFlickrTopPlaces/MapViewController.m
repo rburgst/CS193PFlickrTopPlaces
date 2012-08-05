@@ -35,7 +35,29 @@
 - (void)updateMapView
 {
     if (self.mapView.annotations) [self.mapView removeAnnotations:self.mapView.annotations];
-    if (self.annotations) [self.mapView addAnnotations:self.annotations];
+    
+    
+    if ([self.annotations count] > 0) {
+        id<MKAnnotation> first = [self.annotations objectAtIndex:0];
+        CLLocationCoordinate2D coord = [first coordinate];
+        MKMapPoint topLeft = MKMapPointForCoordinate(coord);
+        MKMapPoint bottomRight = MKMapPointForCoordinate(coord);
+        
+        // detect the ideal zoom size
+        for (id<MKAnnotation> annotation in self.annotations) {
+            MKMapPoint point = MKMapPointForCoordinate(annotation.coordinate);
+            topLeft.x = MIN(point.x, topLeft.x);
+            topLeft.y = MIN(point.y, topLeft.y);
+            bottomRight.x = MAX(point.x, bottomRight.x);
+            bottomRight.y = MAX(point.x, bottomRight.y);
+        }
+        
+        MKMapRect rect = MKMapRectMake(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
+        UIEdgeInsets insets = UIEdgeInsetsMake(30.0, 30.0, 30.0, 30.0);
+        [self.mapView setVisibleMapRect:rect edgePadding:insets animated:YES];
+
+        [self.mapView addAnnotations:self.annotations];
+    }
 }
 
 - (void)setMapView:(MKMapView *)mapView
