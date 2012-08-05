@@ -36,10 +36,8 @@
 
 - (void)loadPhotosForPlace:(NSDictionary*)place
 {
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [spinner startAnimating];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
-
+    [self showSpinner:YES];
+    
     dispatch_queue_t downloadQueue = dispatch_queue_create("PhotosForPlaceDownload", NULL);
     
     dispatch_async(downloadQueue, ^{
@@ -47,7 +45,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             self.photoList = photos;
-            self.navigationItem.rightBarButtonItem = nil;
+            [self showSpinner:NO];
         });
     });
 

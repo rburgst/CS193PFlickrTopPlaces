@@ -9,17 +9,23 @@
 #import "RbFlickrTopPlacesTVC.h"
 #import "FlickrFetcher.h"
 #import "RbFlickrPhotosForPlaceTVC.h"
+#import "FlickrPlaceAnnotation.h"
+#import "MapViewController.h"
 
-@interface RbFlickrTopPlacesTVC ()
+@interface RbFlickrTopPlacesTVC ()<AnnotationsProvider, MapViewControllerDelegate>
 
 - (void)setPlaces:(NSArray*)places;
 
+@property (nonatomic, strong) NSArray* places;
+
 @end
+
+
 
 @implementation RbFlickrTopPlacesTVC
 
 @synthesize placesByCountry = _placesByCountry;
-
+@synthesize places = _places;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -40,10 +46,7 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [spinner startAnimating];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
-
+    [self showSpinner:YES];
     
     dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
     dispatch_async(downloadQueue, ^{
@@ -53,7 +56,7 @@
 
         dispatch_async(dispatch_get_main_queue(), ^{
             self.places = sortedPlaces;
-            self.navigationItem.rightBarButtonItem = nil;
+            [self showSpinner:NO];
         });
     });
     dispatch_release(downloadQueue);
@@ -102,10 +105,13 @@
 
 -(void)setPlaces:(NSArray *)places
 {
-    self.placesByCountry = [self filterCountries:places];
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES];
-    self.countries = [[self.placesByCountry allKeys] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
-    [self.tableView reloadData];
+    if (_places != places) {
+        _places = places;
+        self.placesByCountry = [self filterCountries:places];
+        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES];
+        self.countries = [[self.placesByCountry allKeys] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
+        [self.tableView reloadData];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -126,6 +132,10 @@
         NSDictionary *place = [self placeForIndexPath:[self.tableView indexPathForSelectedRow]];
         
         photoListTVC.place = place;
+    } else if ([segue.identifier isEqualToString:@"ShowMap"]) {
+        MapViewController *mvc = (MapViewController*) segue.destinationViewController;
+        mvc.annotations = [self annotationsForList];
+        mvc.delegate = self;
     }
 }
 
@@ -230,6 +240,31 @@
      // ...
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
+     */
+}
+
+#pragma mark - AnnotationsProvider
+
+- (NSArray*)annotationsForList
+{
+    NSMutableArray *annotations = [NSMutableArray arrayWithCapacity:[[self.placesByCountry allValues] count]];
+//    NSArray* places = [self.placesByCountry allValues];
+    for (NSDictionary *place in self.places) {
+        [annotations addObject:[FlickrPlaceAnnotation annotationForPlace:place]];
+    }
+    return annotations;
+}
+
+#pragma mark - MapViewControllerDelegate
+
+- (UIImage *)mapViewController:(MapViewController *)sender imageForAnnotation:(id <MKAnnotation>)annotation
+{
+    return nil;
+    /*
+    FlickrPlaceAnnotation *fpa = (FlickrPlaceAnnotation *)annotation;
+    NSURL *url = [FlickrFetcher urlForPhoto:fpa.place format:FlickrPhotoFormatSquare];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    return data ? [UIImage imageWithData:data] : nil;
      */
 }
 

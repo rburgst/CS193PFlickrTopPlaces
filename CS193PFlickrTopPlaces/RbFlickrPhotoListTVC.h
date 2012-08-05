@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RbFlickrGenericTVC.h"
 
 #define RECENTS_KEY @"RbFlickrPhotoViewController.recents"
 
-@interface RbFlickrPhotoListTVC : UITableViewController
+@interface RbFlickrPhotoListTVC : RbFlickrGenericTVC
 
 @property (nonatomic, strong) NSArray* photoList;
 

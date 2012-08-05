@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RbFlickrGenericTVC.h"
 
-@interface RbFlickrTopPlacesTVC : UITableViewController
+@interface RbFlickrTopPlacesTVC : RbFlickrGenericTVC
 
 @property (nonatomic, strong) NSDictionary* placesByCountry;
 @property (nonatomic, strong) NSArray* countries;
