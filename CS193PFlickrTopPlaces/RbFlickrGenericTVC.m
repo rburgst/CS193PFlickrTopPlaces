@@ -7,6 +7,7 @@
 //
 
 #import "RbFlickrGenericTVC.h"
+#import "MapViewController.h"
 
 @interface RbFlickrGenericTVC ()
 
@@ -56,4 +57,15 @@
     }
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"ShowMap"] && [self conformsToProtocol:@protocol(AnnotationsProvider)]) {
+        id<AnnotationsProvider> provider = (id<AnnotationsProvider>) self;
+        MapViewController *mvc = (MapViewController*) segue.destinationViewController;
+        mvc.annotations = [provider annotationsForList];
+        if ([self conformsToProtocol:@protocol(MapViewControllerDelegate)]) {
+            mvc.delegate = (id<MapViewControllerDelegate>) self;
+        }
+    }
+}
 @end

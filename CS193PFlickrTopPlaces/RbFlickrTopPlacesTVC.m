@@ -11,6 +11,10 @@
 #import "RbFlickrPhotosForPlaceTVC.h"
 #import "FlickrPlaceAnnotation.h"
 #import "MapViewController.h"
+#import "RbFlickrPhotoViewController.h"
+
+#define SEGUE_SHOW_PLACE @"Photos For Place"
+
 
 @interface RbFlickrTopPlacesTVC ()<AnnotationsProvider, MapViewControllerDelegate>
 
@@ -127,15 +131,16 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"Photos For Place"]) {
+    if ([segue.identifier isEqualToString:SEGUE_SHOW_PLACE]) {
         RbFlickrPhotosForPlaceTVC *photoListTVC = (RbFlickrPhotosForPlaceTVC*) segue.destinationViewController;
-        NSDictionary *place = [self placeForIndexPath:[self.tableView indexPathForSelectedRow]];
+        NSDictionary *place = nil;
+        
+        if ([sender isKindOfClass:[NSDictionary class]]) place = (NSDictionary *) sender;
+        else place = [self placeForIndexPath:[self.tableView indexPathForSelectedRow]];
         
         photoListTVC.place = place;
-    } else if ([segue.identifier isEqualToString:@"ShowMap"]) {
-        MapViewController *mvc = (MapViewController*) segue.destinationViewController;
-        mvc.annotations = [self annotationsForList];
-        mvc.delegate = self;
+    } else {
+        [super prepareForSegue:segue sender:sender];
     }
 }
 
@@ -260,12 +265,15 @@
 - (UIImage *)mapViewController:(MapViewController *)sender imageForAnnotation:(id <MKAnnotation>)annotation
 {
     return nil;
-    /*
-    FlickrPlaceAnnotation *fpa = (FlickrPlaceAnnotation *)annotation;
-    NSURL *url = [FlickrFetcher urlForPhoto:fpa.place format:FlickrPhotoFormatSquare];
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    return data ? [UIImage imageWithData:data] : nil;
-     */
 }
 
+- (void)mapViewController:(MapViewController *)sender detailDisclosurePressed:(UIControl *)button forAnnotation:(MKAnnotationView *)aView
+{
+    FlickrPlaceAnnotation *pa = (FlickrPlaceAnnotation*) aView.annotation;
+    [self performSegueWithIdentifier:SEGUE_SHOW_PLACE sender:pa.place];
+}
+
+- (BOOL)mapViewControllerShouldShowImages:(MapViewController *)sender {
+    return NO;
+}
 @end

@@ -13,6 +13,9 @@
 
 @protocol MapViewControllerDelegate <NSObject>
 - (UIImage *)mapViewController:(MapViewController *)sender imageForAnnotation:(id <MKAnnotation>)annotation;
+- (void)mapViewController:(MapViewController *)sender detailDisclosurePressed:(UIControl*)button forAnnotation:(MKAnnotationView*)aView;
+- (BOOL)mapViewControllerShouldShowImages:(MapViewController *)sender ;
+
 @end
 
 @interface MapViewController : UIViewController

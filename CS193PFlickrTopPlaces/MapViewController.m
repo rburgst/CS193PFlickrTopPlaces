@@ -9,7 +9,10 @@
 #import "MapViewController.h"
 
 @interface MapViewController() <MKMapViewDelegate>
+
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (nonatomic) dispatch_queue_t downloadQueue;
+
 @end
 
 @implementation MapViewController
@@ -17,6 +20,15 @@
 @synthesize mapView = _mapView;
 @synthesize annotations = _annotations;
 @synthesize delegate = _delegate;
+@synthesize downloadQueue = _downloadQueue;
+
+
+- (dispatch_queue_t)downloadQueue {
+    if (!_downloadQueue) {
+        _downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+    }
+    return _downloadQueue;
+}
 
 #pragma mark - Synchronize Model and View
 
@@ -38,6 +50,8 @@
     [self updateMapView];
 }
 
+
+
 #pragma mark - MKMapViewDelegate
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
@@ -46,8 +60,10 @@
     if (!aView) {
         aView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapVC"];
         aView.canShowCallout = YES;
-        aView.leftCalloutAccessoryView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-        // could put a rightCalloutAccessoryView here
+        if ([self.delegate mapViewControllerShouldShowImages:self]) {
+            aView.leftCalloutAccessoryView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+        }
+        aView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     }
 
     aView.annotation = annotation;
@@ -58,13 +74,23 @@
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)aView
 {
-    UIImage *image = [self.delegate mapViewController:self imageForAnnotation:aView.annotation];
-    [(UIImageView *)aView.leftCalloutAccessoryView setImage:image];
+    id<MKAnnotation> annotation = aView.annotation;
+    dispatch_async(self.downloadQueue, ^{
+        UIImage *image = [self.delegate mapViewController:self imageForAnnotation:aView.annotation];
+        
+        dispatch_async(dispatch_get_main_queue(), ^ {
+            if (aView && aView.annotation == annotation) {
+                [(UIImageView *)aView.leftCalloutAccessoryView setImage:image];
+            }
+        });
+        
+    });
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
     NSLog(@"callout accessory tapped for annotation %@", [view.annotation title]);
+    [self.delegate mapViewController:self detailDisclosurePressed:control forAnnotation:view];
 }
 
 #pragma mark - View Controller Lifecycle
@@ -78,6 +104,9 @@
 - (void)viewDidUnload
 {
     [self setMapView:nil];
+    dispatch_release(_downloadQueue);
+    _downloadQueue = 0;
+    
     [super viewDidUnload];
 }
 

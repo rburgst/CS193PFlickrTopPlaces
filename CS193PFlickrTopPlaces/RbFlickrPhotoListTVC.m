@@ -9,8 +9,12 @@
 #import "RbFlickrPhotoListTVC.h"
 #import "FlickrFetcher.h"
 #import "RbFlickrPhotoViewController.h"
+#import "FlickrPhotoAnnotation.h"
+#import "MapViewController.h"
 
-@interface RbFlickrPhotoListTVC ()
+#define SEGUE_SHOW_PHOTO @"Show Photo"
+
+@interface RbFlickrPhotoListTVC () <AnnotationsProvider,MapViewControllerDelegate>
 
 @end
 
@@ -67,12 +71,21 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"Show Photo"]) {
-        NSDictionary *photo = [self.photoList objectAtIndex:[self.tableView indexPathForSelectedRow].row];
+    if ([segue.identifier isEqualToString:SEGUE_SHOW_PHOTO]) {
+        
+        NSDictionary *photo = nil;
+        
+        if ([sender isKindOfClass:[NSDictionary class]]) {
+            photo = (NSDictionary *) sender;
+        } else {
+            photo = [self.photoList objectAtIndex:[self.tableView indexPathForSelectedRow].row];
+        }
         
         [self addPhotoToRecents:photo];
         NSURL *url = [FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatLarge];
         [segue.destinationViewController setPhotoURL:url];
+    } else {
+        [super prepareForSegue:segue sender:sender];
     }
 }
 
@@ -85,6 +98,8 @@
         [self addPhotoToRecents:photo];
         NSURL *url = [FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatLarge];
         photoVC.photoURL = url;
+    } else {
+        [self performSegueWithIdentifier:SEGUE_SHOW_PHOTO sender:self];
     }
 }
 
@@ -143,4 +158,34 @@
     }
 }
 
+#pragma mark - AnnotationsProvider
+
+- (NSArray*)annotationsForList
+{
+    NSMutableArray* result = [NSMutableArray arrayWithCapacity:[self.photoList count]];
+    for (NSDictionary* photo in self.photoList) {
+        [result addObject:[FlickrPhotoAnnotation annotationForPhoto:photo]];
+    }
+    return result;
+}
+
+#pragma mark - MapViewControllerDelegate
+
+- (UIImage *)mapViewController:(MapViewController *)sender imageForAnnotation:(id <MKAnnotation>)annotation
+{
+     FlickrPhotoAnnotation *fpa = (FlickrPhotoAnnotation *)annotation;
+     NSURL *url = [FlickrFetcher urlForPhoto:fpa.photo format:FlickrPhotoFormatSquare];
+     NSData *data = [NSData dataWithContentsOfURL:url];
+     return data ? [UIImage imageWithData:data] : nil;
+}
+
+- (void)mapViewController:(MapViewController *)sender detailDisclosurePressed:(UIControl *)button forAnnotation:(MKAnnotationView *)aView
+{
+    FlickrPhotoAnnotation *pa = (FlickrPhotoAnnotation*) aView.annotation;
+    [self showPhoto:pa.photo];
+}
+
+- (BOOL)mapViewControllerShouldShowImages:(MapViewController *)sender {
+    return YES;
+}
 @end
